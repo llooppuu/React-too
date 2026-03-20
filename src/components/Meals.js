@@ -1,6 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import MealItem from "./MealItem";
 
 const Meals = () => {
+    const [meals, setMeals] = useState([]);
+
     useEffect(() => {
         const fetchMeals = async () => {
             try {
@@ -12,6 +15,7 @@ const Meals = () => {
 
                 const data = await response.json();
                 console.log("Meals from backend:", data);
+                setMeals(data);
             } catch (error) {
                 console.error(error);
             }
@@ -22,9 +26,9 @@ const Meals = () => {
 
     return (
         <ul id="meals">
-            { 
-                // list of meals
-            }
+            {meals.map((meal) => (
+                <MealItem key={meal.id} meal={meal} />
+            ))}
         </ul>
     )
 }

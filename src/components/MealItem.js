@@ -1,15 +1,15 @@
 const MealItem = (props) => {
     return (
-        <li>
+        <li className="meal-item">
             <article>
                 <img src={require(`../assets/${props.meal.image}`)} alt={props.meal.name}/>
                 <div>
                     <h3>{props.meal.name}</h3>
-                    <p>props.meal.price</p>
-                    <p>{props.meal.description}</p>
+                    <p className="meal-item-price">{props.meal.price}</p>
+                    <p className="meal-item-description">{props.meal.description}</p>
                 </div>
-                <p>
-                    <button >Add to Cart</button>
+                <p className="meal-item-actions">
+                    <button className="button">Add to Cart</button>
                 </p>
             </article>
         </li>
