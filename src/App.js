@@ -47,6 +47,10 @@ const AppContent = () => {
                 <p>
                   {item.name} - {item.quantity} x {currencyFormatter.format(item.price)}
                 </p>
+                <div className="cart-item-actions">
+                  <button onClick={() => cartCtx.removeItem(item.id)}>-</button>
+                  <button onClick={() => cartCtx.addItem(item)}>+</button>
+                </div>
               </li>
             ))}
           </ul>
