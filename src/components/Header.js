@@ -5,7 +5,10 @@ import CartContext from '../store/CartContext'
 console.log(logo)
 const Header = () => {
     const cartCtx = useContext(CartContext);
-    const totalCartItems = cartCtx.items.reduce((sum, item) => sum + item.amount, 0);
+    const totalCartItems = cartCtx.items.reduce(
+        (sum, item) => sum + (item.quantity ?? item.amount ?? 0),
+        0
+    );
 
     return (
         <header id="main-header">

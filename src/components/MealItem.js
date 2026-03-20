@@ -12,12 +12,20 @@ const MealItem = (props) => {
     const formattedPrice = currencyFormatter.format(Number(props.meal.price));
 
     const handleAddToCart = () => {
-        cartCtx.addItem({
+        const itemToAdd = {
             id: props.meal.id,
             name: props.meal.name,
-            price: Number(props.meal.price),
-            amount: 1
-        });
+            price: Number(props.meal.price)
+        };
+
+        const currentTotalQuantity = cartCtx.items.reduce(
+            (sum, item) => sum + (item.quantity ?? item.amount ?? 0),
+            0
+        );
+        const nextQuantity = currentTotalQuantity + 1;
+
+        console.log("Added to cart:", { ...itemToAdd, quantity: nextQuantity });
+        cartCtx.addItem(itemToAdd);
     };
 
     return (
