@@ -4,7 +4,8 @@ const CartContext = createContext({
     items: [],
     totalAmount: 0,
     addItem: (item) => {},
-    removeItem: (id) => {}
+    removeItem: (id) => {},
+    clearCart: () => {}
 });
 
 const defaultCartState = {
@@ -43,9 +44,41 @@ const cartReducer = (state, action) => {
     }
 
     if (action.type === "REMOVE_ITEM") {
+        const existingCartItemIndex = state.items.findIndex(
+            (item) => item.id === action.id
+        );
+
+        if (existingCartItemIndex === -1) {
+            return state;
+        }
+
+        const existingItem = state.items[existingCartItemIndex];
+        const currentQuantity = existingItem.quantity ?? existingItem.amount ?? 0;
+
+        let updatedItems;
+
+        if (currentQuantity <= 1) {
+            updatedItems = state.items.filter((item) => item.id !== action.id);
+        } else {
+            const updatedItem = {
+                ...existingItem,
+                quantity: currentQuantity - 1
+            };
+
+            updatedItems = [...state.items];
+            updatedItems[existingCartItemIndex] = updatedItem;
+        }
+
         return {
             ...state,
-            items: state.items.filter((item) => item.id !== action.id)
+            items: updatedItems
+        };
+    }
+
+    if (action.type === "CLEAR_CART") {
+        return {
+            ...state,
+            items: []
         };
     }
 
@@ -63,6 +96,10 @@ export const CartContextProvider = ({ children }) => {
         dispatchCartAction({ type: "REMOVE_ITEM", id });
     };
 
+    const clearCart = () => {
+        dispatchCartAction({ type: "CLEAR_CART" });
+    };
+
     const totalAmount = cartState.items.reduce(
         (sum, item) => sum + item.price * (item.quantity ?? item.amount ?? 0),
         0
@@ -72,7 +109,8 @@ export const CartContextProvider = ({ children }) => {
         items: cartState.items,
         totalAmount,
         addItem: addItemToCart,
-        removeItem: removeItemFromCart
+        removeItem: removeItemFromCart,
+        clearCart
     };
 
     return (
